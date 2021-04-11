@@ -1,5 +1,8 @@
 package emailApplication;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 
@@ -17,7 +20,7 @@ final private int passwordLength =8;
 
 
 enum Department{
-	ACCOUNT("D001"),SALES("D002"),DEVELOPER("D003"),NONE("D000");
+	NONE("D000"),ACCOUNT("D001"),SALES("D002"),DEVELOPER("D003");
 	private String DepartmentId;
 	
 	public String getDepartmentId() {
@@ -35,15 +38,24 @@ public Department getDepartment() {
 }
 
 public Department setDepartment() {
-	
+	boolean match= false;
+	while(!match) {
 	System.out.println("Please select your Department :");
 	for(Department d :Department.values()) {
 		System.out.println("TYPE : "+d.ordinal()+" FOR "+d);}
 		System.out.print("Enter your choice------>");
 	
-	Scanner sc = new Scanner(System.in);
-	int dept = sc.nextInt();
-	department =Department.values()[dept];
+	try {
+		Scanner sc = new Scanner(System.in) ;
+		int dept = sc.nextInt();
+		department =Department.values()[dept];
+		match=true;
+	}
+	catch (Exception e) {
+		System.out.println("please enter correct choice");
+		
+		// TODO: handle exception
+	}}System.out.println("So you belongs to "+department+" Department");
 	return department;
 }
 
@@ -56,6 +68,7 @@ public Email(String firstName, String lastName) {
 	this.department = setDepartment();
 	this.departmentID=setDepartmentId(getDepartment());
 	this.email=createEmail();
+	this.setAlternateEmail();
 	System.out.println(toString());
 	}
 
@@ -70,10 +83,6 @@ public String getPassword() {
 
 public String getAlternateEmail() {
 	return alternateEmail;
-}
-
-public void setAlternateEmail(String alternateEmail) {
-	this.alternateEmail = alternateEmail;
 }
 
 public int getMailBoxCapacity() {
@@ -103,13 +112,42 @@ public String createEmail() {
 public String setDepartmentId(Department department) {
 	return departmentID=department.getDepartmentId();
 }
+public void setAlternateEmail() {
+	String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
+	boolean isTrue =false;
+	while(!isTrue) {
+	System.out.println("Enter your Alternate Email id :");
+	Scanner scn = new Scanner(System.in);
+	String email = scn.nextLine();
+	boolean matches = email.matches(regex);
+	//scn.close();
+	if(matches==true) {
+		this.alternateEmail=email;
+		isTrue=true;
+	}
+	else
+		System.out.println("Please try Again");
+		
+}}
+public void getUserInput() throws IOException {
+	System.out.println("Enter your Firstname :");
+	BufferedReader bs = new BufferedReader(new InputStreamReader(System.in));
+	String fname = bs.readLine();
+	this.firstName =fname;
+	System.out.println("Enter your Lastname :");
+	String lname = bs.readLine();
+	this.lastName=lname;
+	Email emp = new Email(fname, lname);
+	
+	
+}
 
 @Override
 public String toString() {
-	return "Email [firstName=" + firstName + ", lastName=" + lastName + ", department="
-			+ department + ", departmentID="
-					+ departmentID+", email=" + email + ", password=" + password + ", alternateEmail=" + alternateEmail + ", companyName="
-			+ companyName + ", mailBoxCapacity=" + mailBoxCapacity + ", passwordLength=" + passwordLength + "]";
+	return "Email REgistraion form Completed\n firstName=" + firstName + "\n lastName=" + lastName + "\n department="
+			+ department + "\n departmentID="
+					+ departmentID+"\n email=" + email + "\n password=" + password + "\n alternateEmail=" + alternateEmail + "\n companyName="
+			+ companyName + "\n mailBoxCapacity=" + mailBoxCapacity + "\n passwordLength=" + passwordLength ;
 }
 
 }
